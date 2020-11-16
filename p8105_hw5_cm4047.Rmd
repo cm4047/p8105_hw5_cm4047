@@ -106,12 +106,22 @@ path_df =
         pivot_longer(
                 week_1:week_8,
                 names_to = "week",
-                values_to = "observations"
-        ) %>% 
-        mutate(week = recode(week, "week_1" = "1", "week_2" = "2", "week_3" = "3", "week_4" = "4", "week_5" = "5", "week_6" = "6", "week_7" = "7", "week_8" = "8"))
+                values_to = "observations",
+                names_prefix = "week_")
 ```
 
 Make a spaghetti plot showing observations on each subject over time.
+```{r}
+path_df %>% 
+        mutate(subject_ID = str_c(arm, subject_ID)) %>% 
+        ggplot(aes(x = week, y = observations, color = arm, group = subject_ID)) +
+        geom_point() +
+        geom_line() + 
+        labs(title = "Observations for each subjects over 8 weeks",
+             subtitle = "Control arm VS Experimental arm",
+             y = "Values of observations")
+```
+I also create a plot which shows values of observations by different arm on each subject over time.  
 ```{r}
 path_df %>% 
         ggplot(aes(x = week, y = observations, color = subject_ID, group = subject_ID)) +
@@ -121,4 +131,5 @@ path_df %>%
         labs(title = "Observations for each subjects over 8 weeks",
              y = "Values of observations")
 ```
-
+From the plots above, we can see that the values of observations of the experimental group have an increasing trend while the values of observations of the control group fluctuated a lot. The average value of observations of the experimental group is larger than that of observations of the control group.
+# Problem 3  
